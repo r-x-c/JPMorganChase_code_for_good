@@ -84,7 +84,6 @@ public class ResCalls {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void getGender() {
@@ -95,10 +94,10 @@ public class ResCalls {
 		getGeneral("race");
 	}
 
-	public void getQuestion() {
+	public void getQuestion(int hero_id) {
 		Map<String, ArrayList<String>> qhash = new HashMap<String, ArrayList<String>>();
 
-		String sqQ = "SELECT question_id, q_text FROM question_t";
+		String sqQ = "SELECT question_id, q_text FROM question_t WHERE hero_id LIKE " + hero_id;
 		try {
 			ResultSet rs = getConnection().executeQuery(sqQ);
 
@@ -120,6 +119,36 @@ public class ResCalls {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@POST
+	@Path("/createUser")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void createUser(JSONObject obj) {
+		String sqlQuery = "INSERT INTO user_t (location, age, gender, race, gpa, discipline, balance)";
+		sqlQuery += " VALUES (" + obj.getString(location) + ", " + obj.getInt(age) + ", " + obj.getString(gender);
+		sqlQuery += ", " + obj.getString(race) + ", 2, 30, 25);";
+		ResultSet rs = getConnection().executeQuery(sqlQuery);
+	}
+
+	@POST
+	@PATH("/updateQuestion")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void updateQuestion(JSONObject obj) {
+		String sqlQuery = "INSERT INTO answered_questions_t (user_id, question_id) VALUES (" + obj.getInt(user_id);
+		sqlQuery += ", " + obj.getInt(question_id) + ");";
+		ResultSet rs = getConnection().executeQuery(sqlQuery);
+	}
+
+	public 
+
+	private bool notInQuestionTable(int user_id) {
+		String sqlQuery = "SELECT question_id FROM answered_questions_t WHERE user_id LIKE " + user_id + ";";
+		ResultSet rs = getConnection().executeQuery(sqlQuery);
+		if(rs.first() != null) {
+			return false;
+		}
+		return true;
 	}
 
 	private Statement getConnection() {
