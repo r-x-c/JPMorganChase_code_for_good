@@ -1,4 +1,4 @@
-"""rest_example URL Configuration
+"""sqladmin URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.9/topics/http/urls/
@@ -16,18 +16,6 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
-
-from restapp import views
-
 urlpatterns = [
-
     url(r'^admin/', admin.site.urls),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^users/', views.UserList.as_view()),
-    url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()),
 ]
-
-
