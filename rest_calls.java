@@ -3,18 +3,37 @@ import javax.ws.rs.*;
 
 @Path("/choices/")
 public class ResCalls {
+	Connection conn = null;
+	Statement stmt = null;
 
-	@GET
-	@Path("/getLocations/")
-	@Produces("application/json")
+	public static void main(String[] args){
+		ResCalls r = new ResCalls();
+		r.getLocations();
+	}
+	
+//	@GET
+//	@Path("/getLocations/")
+//	@Produces("application/json")
 	public String getLocations() {
-		//String 
+		String sqL = "SELECT location FROM user_t";
+		try {
+			ResultSet rs = getConnection().executeQuery(sqL);
+
+			while (rs.next()) {
+				// Retrieve by column name
+				String location = rs.getString("location");
+				// Display values
+				System.out.print("Location: " + location);
+			}
+			closeConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	private Statement getConnection() {
-		Connection conn = null;
-		Statement stmt = null;
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver").newInstance();
 			conn = DriverManager.getConnection("jdbc:mysql://52.87.182.66:3306/choices", "root", "root");
@@ -28,19 +47,22 @@ public class ResCalls {
 			// Handle errors for Class.forName
 			e.printStackTrace();
 			return null;
-		} finally {
-			// finally block used to close resources
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException se2) {
-			} // nothing we can do
-			try {
-				if (conn != null)
-					conn.close();
-			} catch (SQLException se) {
-				se.printStackTrace();
-			} // end finally try
+		}
+		// finally block used to close resources
+		// end finally try
+	}
+
+	private void closeConnection() {
+		try {
+			if (stmt != null)
+				stmt.close();
+		} catch (SQLException se2) {
+		} // nothing we can do
+		try {
+			if (conn != null)
+				conn.close();
+		} catch (SQLException se) {
+			se.printStackTrace();
 		}
 	}
 }
