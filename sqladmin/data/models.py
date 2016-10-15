@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 # This is an auto-generated Django model module.
 # You'll have to do the following manually to clean this up:
 #   * Rearrange models' order
@@ -23,14 +24,22 @@ class AnswerT(models.Model):
         managed = False
         db_table = 'answer_t'
 
+    def __str__(self):  # __unicode__ on Python 2
+        return ("Question_ID: {} Answer: {} Effects: [GPA {}] [Balance {}] [Discipline {}]".format(self.question,
+                                                                                                   self.answer,
+                                                                                                   self.gpa_effect,
+                                                                                                   self.balance_effect,
+                                                                                                   self.discipline_effect))
+
 
 class AnsweredQuestionsT(models.Model):
-    user = models.ForeignKey('QuestionT', models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey('UserT', models.DO_NOTHING, blank=True, null=True)
     question = models.ForeignKey('QuestionT', models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'answered_questions_t'
+
 
 
 class AuthGroup(models.Model):
@@ -163,6 +172,10 @@ class QuestionT(models.Model):
         managed = False
         db_table = 'question_t'
 
+    def __str__(self):  # __unicode__ on Python 2
+        return ("Hero {} asks {}".format(self.hero, self.q_text))
+
+
 
 class UserT(models.Model):
     age = models.IntegerField(blank=True, null=True)
@@ -179,5 +192,7 @@ class UserT(models.Model):
         managed = False
         db_table = 'user_t'
 
-
+    def __str__(self):  # __unicode__ on Python 2
+        return ("Age {} {} from {} [GPA {} Discipline {} Balance {}]".format(self.age, self.gender, self.location,
+                                                                             self.gpa, self.discipline, self.balance))
 
