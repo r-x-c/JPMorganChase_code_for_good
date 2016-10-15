@@ -1,4 +1,5 @@
-import java.awt.PageAttributes.MediaType;
+import java.awt.*;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,7 +16,7 @@ public class ResCalls {
 
 	public static void main(String[] args) {
 		ResCalls r = new ResCalls();
-		r.getQuestion();
+		
 	}
 
 	private static void printMap(Map<String, Integer> mp) {
@@ -28,9 +29,9 @@ public class ResCalls {
 	}
 
 
-	// @GET
-	// @Path("/getLocations/")
-	// @Produces(MediaType.APPLICATION_JSON)
+	@GET
+	@Path("/getLocations/")
+	@Produces("application/json")
 	public void getGeneral(String name) {
 		Map<String, Integer> hash = new HashMap<String, Integer>();
 
@@ -123,30 +124,33 @@ public class ResCalls {
 
 	@POST
 	@Path("/createUser")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void createUser(JSONObject obj) {
+	@Consumes("application/json")
+	public void createUser(JSONObject obj) throws SQLException {
 		String sqlQuery = "INSERT INTO user_t (location, age, gender, race, gpa, discipline, balance)";
-		sqlQuery += " VALUES (" + obj.getString(location) + ", " + obj.getInt(age) + ", " + obj.getString(gender);
-		sqlQuery += ", " + obj.getString(race) + ", 2, 30, 25);";
+		sqlQuery += " VALUES (" + obj.getString("location") + ", " + obj.getInt("age") + ", " + obj.getString("gender");
+		sqlQuery += ", " + obj.getString("race") + ", 2, 30, 25);";
 		ResultSet rs = getConnection().executeQuery(sqlQuery);
 	}
 
 	@POST
-	@PATH("/updateQuestion")
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void updateQuestion(JSONObject obj) {
-		String sqlQuery = "INSERT INTO answered_questions_t (user_id, question_id) VALUES (" + obj.getInt(user_id);
-		sqlQuery += ", " + obj.getInt(question_id) + ");";
+	@Path("/updateQuestion")
+	@Consumes("application/json")
+	public void updateQuestion(JSONObject obj) throws SQLException {
+		int question_id = obj.getInt("question_id");
+		String sqlQuery = "INSERT INTO answered_questions_t (user_id, question_id) VALUES (" + obj.getInt("user_id") + "," + question_id + ")";
+		sqlQuery += ", " + obj.getInt("question_id") + ");";
 		ResultSet rs = getConnection().executeQuery(sqlQuery);
 	}
-
-	public 
-
-	private bool notInQuestionTable(int user_id) {
+	
+	private boolean notInQuestionTable(int user_id) throws SQLException {
 		String sqlQuery = "SELECT question_id FROM answered_questions_t WHERE user_id LIKE " + user_id + ";";
 		ResultSet rs = getConnection().executeQuery(sqlQuery);
-		if(rs.first() != null) {
-			return false;
+		try {
+			if(rs.first()) {
+				return false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return true;
 	}
