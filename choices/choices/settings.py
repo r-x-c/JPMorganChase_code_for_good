@@ -74,12 +74,52 @@ WSGI_APPLICATION = 'choices.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# settings.py
+# DATABASES = {
+#     'default': {
+#         'OPTIONS': {
+#             'read_default_file': '/path/to/my.cnf',
+#         },
+#     }
+# }
+
+# Database Configuration
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.getenv('RDS_DB_NAME', 'decipher'),
+        'USER': os.getenv('RDS_USERNAME', 'decipher'),
+        'PASSWORD': os.getenv('RDS_PASSWORD', 'decipher'),
+        'HOST': os.getenv('RDS_HOSTNAME', 'localhost'),
+        'PORT': os.getenv('RDS_PORT', 5432)
     }
 }
+
+CONN_MAX_AGE = 60  # TTL to Close Database Pool
+
+# Django-Rest-Framework Configuration
+REST_FRAMEWORK = {
+    'FILTER_BACKEND': 'rest_framework.filters.DjangoFilterBackend',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.AllowAny',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'decipherweb.authentication.ExpiringTokenAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'drf_ujson.renderers.UJSONRenderer',
+    )
+}
+
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 
 # Password validation
