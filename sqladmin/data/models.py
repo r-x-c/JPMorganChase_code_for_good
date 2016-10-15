@@ -162,6 +162,10 @@ class HeroT(models.Model):
         managed = False
         db_table = 'hero_t'
 
+    def __str__(self):  # __unicode__ on Python 2
+        return ("{}, {}".format(self.name, self.age))
+
+
 
 class QuestionT(models.Model):
     question_id = models.AutoField(primary_key=True)
