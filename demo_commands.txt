@@ -1,0 +1,9 @@
+mysql -u root -p
+
+use choices;
+
+show tables;
+
+select * from question_t;
+
+
